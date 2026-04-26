@@ -1,0 +1,13 @@
+{
+  "testEnvironment": "node",
+  "testTimeout": 30000,
+  "testMatch": ["**/tests/**/*.test.js"],
+  "collectCoverageFrom": [
+    "models/**/*.js",
+    "routes/**/*.js",
+    "middleware/**/*.js",
+    "utils/**/*.js"
+  ],
+  "coverageDirectory": "coverage",
+  "verbose": true
+}

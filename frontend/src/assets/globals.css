@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════════════════
+   CHCCI E-Voting System — Design System
+   Concepcion Holy Cross College Inc.
+   Commission on Student Election (COSE)
+   Colors: Navy Blue × Gold
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  /* Navy blue dark-to-light scale */
+  --ink:         #05080f;
+  --ink-deep:    #020408;
+  --ink-mid:     #0a1020;
+  --ink-light:   #0f1a30;
+  --ash:         #1a2a45;
+  --stone:       #3a5070;
+  --mist:        #7090b0;
+  --vellum:      #cdd8e8;
+  --cream:       #e0e8f4;
+  --ivory:       #eef3fa;
+
+  /* Gold accent scale */
+  --gold:        #c4a96a;
+  --gold-light:  #d4bb82;
+  --gold-dark:   #a8903a;
+  --gold-mute:   #6a5a30;
+
+  /* Navy accent for highlights */
+  --navy:        #1a3a6a;
+  --navy-light:  #2a4f8a;
+  --navy-bright: #3a6aaa;
+
+  --seal:        #8b1a1a;
+  --danger:      #c42a2a;
+  --warning:     #c4841a;
+  --success:     #2a8a5a;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Cormorant Garamond', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+
+  --border-dim:    1px solid rgba(196, 169, 106, 0.12);
+  --border-mid:    1px solid rgba(196, 169, 106, 0.25);
+  --border-bright: 1px solid rgba(196, 169, 106, 0.5);
+  --border-navy:   1px solid rgba(58, 106, 170, 0.25);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-io:  cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Subtle navy gradient overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 0%, rgba(26,58,106,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 100%, rgba(196,169,106,0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Grain texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 128px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.35;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--cream);
+}
+
+a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold-light); }
+
+::-webkit-scrollbar { width: 5px; background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 3px; }
+
+:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes sealDrop {
+  0%   { transform: scale(0.6) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes scanline {
+  0%   { top: 0; opacity: 1; }
+  95%  { opacity: 0.3; }
+  100% { top: 100vh; opacity: 0; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Utility classes ─────────────────────────────────────── */
+.mono { font-family: var(--font-mono); }
+.fade-up { animation: fadeUp 0.6s var(--ease-out) both; }
+.no-select { user-select: none; }
+
+.spinner {
+  display: inline-block;
+  width: 32px; height: 32px;
+  border: 2px solid rgba(196,169,106,0.15);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.spinner--sm {
+  width: 16px; height: 16px;
+  border-width: 2px;
+}
+
+/* ── Vue transition classes ──────────────────────────────── */
+.page-enter-active { animation: fadeUp 0.4s var(--ease-out) both; }
+.page-leave-active { animation: fadeIn 0.2s var(--ease-out) reverse both; }
+
+.slide-enter-active { animation: slideIn 0.3s var(--ease-out) both; }
+.slide-leave-active { animation: slideIn 0.2s var(--ease-out) reverse both; }
+
+/* ── Print block ─────────────────────────────────────────── */
+@media print {
+  * { display: none !important; }
+}
+
+/* ── Global responsive base ──────────────────────────────────── */
+@media (max-width: 768px) {
+  :root { font-size: 15px; }
+  body { overflow-x: hidden; }
+}
+@media (max-width: 480px) {
+  :root { font-size: 14px; }
+}
+
+/* Prevent text from overflowing on small screens */
+* { word-break: break-word; }
+img, svg { max-width: 100%; }
+
+/* Make all tables scrollable on mobile instead of overflowing */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
