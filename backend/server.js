@@ -23,6 +23,7 @@ const auditRoutes = require('./routes/audit');
 const candidateRoutes = require('./routes/candidates');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────────────
 app.use(helmet({
