@@ -23,11 +23,13 @@ const sendTokenResponse = (user, statusCode, res) => {
 
   const csrfToken = crypto.randomBytes(32).toString('hex');
 
+  const isProd = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRE) || 2) * 60 * 60 * 1000),
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'strict',  // 'none' required for cross-origin in production
+    path: '/',
   };
 
   res
@@ -128,8 +130,8 @@ router.post('/change-password', protect, [
 
     // Expire the current session — user must log in again with their new password
     res
-      .cookie('token', 'none', { expires: new Date(Date.now() + 5 * 1000), httpOnly: true })
-      .cookie('csrf-token', 'none', { expires: new Date(Date.now() + 5 * 1000) })
+      .cookie('token', 'none', { expires: new Date(Date.now() + 5 * 1000), httpOnly: true, secure: isProd, sameSite: isProd ? 'none' : 'strict', path: '/' })
+      .cookie('csrf-token', 'none', { expires: new Date(Date.now() + 5 * 1000), secure: isProd, sameSite: isProd ? 'none' : 'strict', path: '/' })
       .json({ success: true, message: 'Password changed successfully. Please log in again.' });
 
   } catch (err) {
@@ -142,8 +144,9 @@ router.post('/logout', protect, async (req, res) => {
   await AuditLog.create({ category: 'auth', action: 'logout', severity: 'info',
     userId: req.user._id, userEmail: req.user.email, ipHash: hashIP(req.ip), success: true });
 
-  res.cookie('token', 'none', { expires: new Date(Date.now() + 5 * 1000), httpOnly: true })
-     .cookie('csrf-token', 'none', { expires: new Date(Date.now() + 5 * 1000) })
+  const isProd2 = process.env.NODE_ENV === 'production';
+  res.cookie('token', 'none', { expires: new Date(Date.now() + 5 * 1000), httpOnly: true, secure: isProd2, sameSite: isProd2 ? 'none' : 'strict', path: '/' })
+     .cookie('csrf-token', 'none', { expires: new Date(Date.now() + 5 * 1000), secure: isProd2, sameSite: isProd2 ? 'none' : 'strict', path: '/' })
      .json({ success: true, message: 'Logged out successfully.' });
 });
 
